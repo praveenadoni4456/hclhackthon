@@ -1,0 +1,33 @@
+steps:
+  - id: 'tf init'
+    name: 'hashicorp/terraform:latest'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - 'terraform init -chdir=terraform -backend-config=backend/dev.tfvars'
+  - id: 'tf workspace'
+    name: 'hashicorp/terraform:latest'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - 'terraform -chdir=terraform workspace select default'
+  - id: 'tf validate'
+    name: 'hashicorp/terraform:latest'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - 'terraform validate'
+  - id: 'tf plan'
+    name: 'hashicorp/terraform:latest'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - 'terraform plan -chdir=terraform -out=dev.tfplan -var-file=tfvars/dev.tfvars'
+  - id: 'tf apply'
+    name: 'hashicorp/terraform:latest'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - 'terraform apply -chdir=terraform -var-file=tfvars/dev.tfvars -auto-approve'
+options:
+  logging: CLOUD_LOGGING_ONLY
